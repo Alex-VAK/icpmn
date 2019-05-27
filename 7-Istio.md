@@ -59,10 +59,25 @@ To run the sample with Istio requires no changes to the application itself. Inst
 
 Istio has been normal installed during your IBM Cloud Private installation (parameter "istio: enabled" in the config.yaml). You can also install istio after the IBM Cloud Private installation. 
 
+Be sure you are connected to your environment :
+
+```con
+./connect2icp.sh
+export HELM_HOME=/root/.helm
+cloudctl login -a https://$CLUSTERNAME.icp:8443 --skip-ssl-validation -u admin -p $CLUSTERPASS -n default
+helm version --tls
+```
+
+If you need to delete all istio components:
+
+```
+kubectl get crd | grep istio | awk '{print $1}' | xargs kubectl delete crd
+```
+
 Be sure to be at the latest version(this command upgrade ISTIO at the latest version):
 
 ```console
-helm upgrade istio ibm-charts/ibm-istio --namespace istio-system --tls --set prometheus.enabled=true --set grafana.enabled=true
+helm upgrade istio ibm-charts/ibm-istio --namespace istio-system --tls --set prometheus.enabled=true --set grafana.enabled=true --set=grafana.image.tag=1.0.2.1  --set=global.proxy.tag=1.0.2.1 --set=pilot.image.tag=1.0.2.1 --version=1.0.5
 ```
 
 Ensure that the `istio-*` Kubernetes services are deployed before you continue.

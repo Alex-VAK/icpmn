@@ -536,6 +536,21 @@ Login Succeeded
 
 ```
 
+Now modify your .bashrc file so that when you login again, you will be connected to the cluster:
+
+```console
+cd
+cat <<END >>.bashrc
+./connect2icp.sh
+export HELM_HOME=/root/.helm
+cloudctl login -a https://$CLUSTERNAME.icp:8443 --skip-ssl-validation -u admin -p $CLUSTERPASS -n default
+helm version --tls
+END
+source .bashrc
+```
+
+
+
 **Persistent volumes** : for our first installation, we need to have some basic hostpath volumes.
 
 > Note that hostpath volumes will not be used in a HA production environment. 
@@ -543,7 +558,7 @@ Login Succeeded
  Type the following commands:
 
 ```console
-cd /tmp
+cd /var
 mkdir data01
 
 cat <<EOF | kubectl create -f -
@@ -557,7 +572,7 @@ spec:
   capacity:
     storage: 50Gi
   hostPath:
-    path: /tmp/data01
+    path: /var/data01
   persistentVolumeReclaimPolicy: Recycle
 EOF
 
@@ -572,7 +587,7 @@ spec:
   capacity:
     storage: 50Gi
   hostPath:
-    path: /tmp/data01
+    path: /var/data01
   persistentVolumeReclaimPolicy: Recycle
 EOF
 
@@ -833,6 +848,16 @@ export HELM_HOME=/root/.helm
 helm init --client-only
 helm version --tls
 docker login $CLUSTERNAME.icp:8500 -u admin -p $CLUSTERPASS
+
+# Source .bashrc
+
+cat <<END >>.bashrc
+./connect2icp.sh
+export HELM_HOME=/root/.helm
+cloudctl login -a https://$CLUSTERNAME.icp:8443 --skip-ssl-validation -u admin -p $CLUSTERPASS -n default
+helm version --tls
+END
+source .bashrc
 
 # Installing Persistent Storage in the Master
 

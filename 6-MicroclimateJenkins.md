@@ -39,9 +39,14 @@ From a machine that is hosting your environment, open a web browser and go to on
 
 Application workloads can be deployed to run on an IBM Cloud Private cluster. The deployment of an application workload must be made available as a Helm package. Such packages must either be made available for deployment on a Helm repository, or loaded into an IBM Cloud Private internal Helm repository.
 
-Be sure you are connected to your environment : `./connect2icp.sh`
+Be sure you are connected to your environment :
 
-Also check helm: `helm version --tls`
+```con
+./connect2icp.sh
+export HELM_HOME=/root/.helm
+cloudctl login -a https://$CLUSTERNAME.icp:8443 --skip-ssl-validation -u admin -p $CLUSTERPASS -n default
+helm version --tls
+```
 
 
 
@@ -439,7 +444,7 @@ The application should appear (this is a very simple page):
 
 ![image-20190308152908524](images/image-20190308152908524-2055348.png)
 
-Navigate on the left pane to the **Edit** button:
+Navigate on the left pane to the **Edit** button (the first time, it could take 1 minute to start):
 
 ![image-20190308153005837](images/image-20190308153005837-2055405.png)
 
@@ -536,9 +541,7 @@ Click on **Open Pipeline** to get access to Jenkins  (enter your credentials at 
 
 
 
-Wait until the progression ends:
-
-You can look at the bottom left side to see there are some slave executor available :
+You can look at the bottom left side to see there are some slave executor available (wait about 1mn) :
 
 ![image-20190311105944709](images/image-20190311105944709-2298384.png)
 
